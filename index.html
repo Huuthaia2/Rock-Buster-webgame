@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from rock-buster.apps.minigame.vip/minigame-index.html?mn_config=https://indigo.minigame.vip/v1/api/channel/indigo/main/game/rock-buster/config&ts=1690168474451 by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Jul 2023 03:17:18 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+    <style></style>
+    <style>
+        @keyframes pulse {
+            0% {
+                transform: scale(1, 1);
+            }
+
+            100% {
+                transform: scale(0.9, 0.9);
+            }
+        }
+
+        @keyframes twist {
+            0% {
+                transform: skewX(-10deg);
+            }
+
+            100% {
+                transform: skewX(10deg);
+            }
+        }
+
+        @keyframes jump {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(-4deg);
+            }
+
+            100% {
+                transform: rotate(4deg);
+            }
+        }
+
+        #modal {
+            z-index: 9999;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        input,
+        textarea {
+            -webkit-user-select: text;
+            -khtml-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        #loading {
+            position: fixed;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 999;
+        }
+
+        body,
+        html {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            overflow: hidden;
+            background: 0 0;
+            touch-action: none;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .cover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .center-absolute {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            margin: auto;
+        }
+
+        .not-select {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .hide {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 1s, visiblility 1s;
+        }
+
+        .show {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 1s, visiblility 1s;
+        }
+
+        .simple-pulse {
+            animation-name: pulse;
+            animation-duration: 0.5s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+        #animation_container {
+            position: absolute;
+            margin: auto;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        @keyframes alpha {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .loading_pro4 {
+            width: 120px;
+            height: 20px;
+            -webkit-mask: linear-gradient(90deg, #000 70%, #0000 0) 0/20%;
+            background:
+                linear-gradient(#000 0 0) 0/0% no-repeat #ddd;
+            animation: loading_p4 2s infinite steps(6);
+        }
+
+        @keyframes loading_p4 {
+            100% {
+                background-size: 120%
+            }
+        }
+
+        .loading_spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .loading_bj {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99999;
+            background-color: rgba(51, 51, 51, 0.5);
+            transition: 0.2s ease-in;
+            transition-property: background-color;
+            display: block;
+        }
+    </style>
+    <script src="sdk.minigame.vip/js/1.5/minigame6d4e.js?t=1684317373"></script>
+</head>
+
+<div class='loading_bj' id='CI-loading'>
+    <div class="loading_pro4 loading_spinner"></div>
+    <script>
+        function hide_loading () {
+            //@ts-ignore
+            minigame.setLoadingProgress(100);
+            //@ts-ignore
+            minigame.startGameAsync()
+                .then(function () {
+                    var em = document.getElementById("CI-loading")
+                    em && setTimeout(function () { em.parentNode.removeChild(em) }, 1618);
+                })
+                .catch(function (e) {
+                    console.info("startGameAsync error: " + e);
+                });
+        }
+        function loadLib (url, async) {
+            var script = document.createElement("script");
+            script.async = async ? true : false;
+            script.src = url;
+            document.body.appendChild(script);
+        }
+        if (window.minigame) {
+            minigame.initializeAsync().then(function () {
+                loadLib("js/main.min.js", true);
+                console.log("FB initializeAsync");
+                // 记录启动来源
+                // @ts-ignore
+                minigame.getEntryPointAsync().then(function (entry) {
+                    console.info("Entry Point: ", entry);
+                });
+                // 记录会话类型
+                // @ts-ignore
+                const contextType = minigame.context.getType();
+                console.info("Context Type: ", contextType);
+            })
+        }
+    </script>
+</div>
+
+<body>
+</body>
+
+
+<!-- Mirrored from rock-buster.apps.minigame.vip/minigame-index.html?mn_config=https://indigo.minigame.vip/v1/api/channel/indigo/main/game/rock-buster/config&ts=1690168474451 by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Jul 2023 03:17:18 GMT -->
+</html>
